@@ -20,13 +20,8 @@ const list = [
 function getTitle(title) {
   return title;
 }
-function App() {
+function List(){
   return (
-    <div>
-      <h1>Hello {getTitle("React")}</h1>
-      <label htmlFor="search">Search: </label>
-      <input id="search" type="text" />
-      <hr />
       <ul>
         {list.map(function (item) {
           return (
@@ -41,6 +36,23 @@ function App() {
           );
         })}
       </ul>
+  );
+};
+function Search(){
+  return (
+    <div>
+        <label htmlFor="search">Search: </label>
+        <input id="search" type="text" />
+    </div>
+  );
+};
+function App() {
+  return (
+    <div>
+      <h1>Hello {getTitle("React")}</h1>
+      <Search />
+      <hr />
+      <List />
     </div>
   );
 }
