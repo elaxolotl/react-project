@@ -31,6 +31,7 @@ const Search = () => {
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
+    props.onSearch(event)
   }
   return (
     <div>
@@ -61,10 +62,13 @@ const App = () => {
       objectID: 1,
     },
   ];
+  const handleSearch = (event) => {
+    console.log(event.target.value)
+  }
   return (
     <div>
       <h1>Hacker stories</h1>
-      <Search />
+      <Search onSearch={handleSearch}/>
       <hr />
       <List list={stories} />
     </div>
