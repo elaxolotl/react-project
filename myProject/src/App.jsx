@@ -1,14 +1,18 @@
 import * as React from "react";
+
 function getTitle(title) {
   return title;
 }
-const List = (props) => (
+
+const List = (props) => {
+  console.log("App")
+  return (
   <ul>
     {props.list.map((item) => (
       <Item key={item.objectID} item={item} />
     ))}
   </ul>
-);
+);}
 
 const Item = (list) => (
   <li key={list.item.objectID}>
@@ -22,19 +26,23 @@ const Item = (list) => (
 );
 
 const Search = () => {
+  console.log("Search")
+  const [searchTerm, setSearchTerm] = React.useState('');
+
   const handleChange = (event) => {
-    console.log(event);
-    console.log(event.target.value);
+    setSearchTerm(event.target.value);
   }
   return (
     <div>
       <label htmlFor="search">Search: </label>
       <input id="search" type="text" onChange={handleChange} />
+      <p>Searcing for <strong>{searchTerm}</strong></p>
     </div>
   );
 };
 
 const App = () => {
+  console.log("App")
   const stories = [
     {
       title: "React",
