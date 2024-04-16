@@ -1,18 +1,15 @@
 import * as React from "react";
 
-function getTitle(title) {
-  return title;
-}
-
 const List = (props) => {
   console.log("App")
   return (
-  <ul>
-    {props.list.map((item) => (
-      <Item key={item.objectID} item={item} />
-    ))}
-  </ul>
-);}
+    <ul>
+      {props.list.map((item) => (
+        <Item key={item.objectID} item={item} />
+      ))}
+    </ul>
+  );
+}
 
 const Item = (list) => (
   <li key={list.item.objectID}>
@@ -25,19 +22,12 @@ const Item = (list) => (
   </li>
 );
 
-const Search = () => {
+const Search = (props) => {
   console.log("Search")
-  const [searchTerm, setSearchTerm] = React.useState('');
-
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-    props.onSearch(event)
-  }
   return (
     <div>
       <label htmlFor="search">Search: </label>
-      <input id="search" type="text" onChange={handleChange} />
-      <p>Searcing for <strong>{searchTerm}</strong></p>
+      <input id="search" type="text" onChange={props.onSearch} />
     </div>
   );
 };
@@ -62,15 +52,19 @@ const App = () => {
       objectID: 1,
     },
   ];
+  const [searchTerm, setSearchTerm] = React.useState('');
   const handleSearch = (event) => {
-    console.log(event.target.value)
+    setSearchTerm(event.target.value)
   }
+  const searchedStories = stories.filter(function (story) {
+    return story.title.toLowerCase().includes(searchTerm.toLowerCase());
+  })
   return (
     <div>
       <h1>Hacker stories</h1>
-      <Search onSearch={handleSearch}/>
+      <Search onSearch={handleSearch} />
       <hr />
-      <List list={stories} />
+      <List list={searchedStories} />
     </div>
   );
 }
