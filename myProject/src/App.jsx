@@ -1,33 +1,36 @@
 import * as React from "react";
 
-const List = (props) => {
-  console.log("App")
+const List = ({list}) => {
   return (
     <ul>
-      {props.list.map((item) => (
+      { list.map((item) => (
         <Item key={item.objectID} item={item} />
       ))}
     </ul>
   );
 }
 
-const Item = (list) => (
-  <li key={list.item.objectID}>
+const Item = ({item}) => (
+  <li key={item.objectID}>
     <span>
-      <a href={list.item.url}>{list.item.title} </a>
+      <a href={item.url}>{item.title} </a>
     </span>
-    <span>{list.item.author}</span>
-    <span>{list.item.num_comments}</span>
-    <span>{list.item.points}</span>
+    <span>{item.author}</span>
+    <span>{item.num_comments}</span>
+    <span>{item.points}</span>
   </li>
 );
 
-const Search = (props) => {
-  console.log("Search")
+const Search = ({search, onSearch}) => {
   return (
     <div>
       <label htmlFor="search">Search: </label>
-      <input id="search" type="text" value={props.search} onChange={props.onSearch} />
+      <input
+        id="search"
+        type="text"
+        value={search}
+        onChange={onSearch} 
+      />
     </div>
   );
 };
