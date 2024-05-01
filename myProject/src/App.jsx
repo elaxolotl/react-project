@@ -1,10 +1,10 @@
 import * as React from "react";
 
-const List = ({list}) => {
+const List = ({list, onRemoveItem }) => {
   return (
     <ul>
       { list.map((item) => (
-        <Item key={item.objectID} item={item} />
+        <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
       ))}
     </ul>
   );
@@ -18,6 +18,11 @@ const Item = ({item}) => (
     <span>{item.author}</span>
     <span>{item.num_comments}</span>
     <span>{item.points}</span>
+    <span>
+      <button type="button" onClick={() => onRemoveItem(item)}>
+        Dismiss
+      </button>
+    </span>
   </li>
 );
 
@@ -36,7 +41,7 @@ const Search = ({search, onSearch}) => {
 };
 
 const App = () => {
-  const stories = [
+  const initialStories = [
     {
       title: "React",
       url: "https://reactjs.org/",
@@ -54,8 +59,14 @@ const App = () => {
       objectID: 1,
     },
   ];
+  const [stories, setStories] = React.useState(initialStories);
   const [searchTerm, setSearchTerm] = React.useState(localStorage.getItem('search') || 'React');
-
+  const handleRemoveStory = (item) =>{
+    const newStories = stories.filter(
+      (story) => item.objectID !== story.objectID
+    );
+    setStories(newStories)
+  }
   React.useEffect(()=>{
     localStorage.setItem('search', searchTerm);
   }, [searchTerm])
@@ -80,7 +91,7 @@ const App = () => {
       </InputWithLabel>
       <Search onSearch={handleSearch} search={searchTerm} />
       <hr />
-      <List list={searchedStories} search={searchTerm} />
+      <List list={searchedStories} onRemoveItem={handleRemoveStory} />
     </div>
   );
 }
