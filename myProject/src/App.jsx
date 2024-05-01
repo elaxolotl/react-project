@@ -71,12 +71,37 @@ const App = () => {
   return (
     <div>
       <h1>Hacker stories</h1>
+      <InputWithLabel
+        id="search"
+        value={searchTerm}
+        onInputChange={handleSearch}
+      >
+        <strong>Search:</strong>
+      </InputWithLabel>
       <Search onSearch={handleSearch} search={searchTerm} />
       <hr />
       <List list={searchedStories} search={searchTerm} />
     </div>
   );
 }
+
+const InputWithLabel =({
+  id,
+  value,
+  onInputChange,
+  children,
+}) => (
+  <>
+    <label htmlFor={id}>{children}</label>
+    &nbsp;
+    <input
+      id={id}
+      type="text"
+      value={value}
+      onChange={onInputChange}/>
+  </>
+);
+
 
 
 export default App;
