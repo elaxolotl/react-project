@@ -1,16 +1,18 @@
 import * as React from "react";
 
-const List = ({list, onRemoveItem }) => {
+const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
+
+const List = ({ list, onRemoveItem }) => {
   return (
     <ul>
-      { list.map((item) => (
+      {list.map((item) => (
         <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
       ))}
     </ul>
   );
 }
 
-const Item = ({item}) => (
+const Item = ({ item }) => (
   <li key={item.objectID}>
     <span>
       <a href={item.url}>{item.title} </a>
@@ -26,48 +28,16 @@ const Item = ({item}) => (
   </li>
 );
 
-const Search = ({search, onSearch}) => {
-  return (
-    <div>
-      <label htmlFor="search">Search: </label>
-      <input
-        id="search"
-        type="text"
-        value={search}
-        onChange={onSearch} 
-      />
-    </div>
-  );
-};
-
 const App = () => {
-  const initialStories = [
-    {
-      title: "React",
-      url: "https://reactjs.org/",
-      author: "Jordan Walke",
-      num_comments: 3,
-      points: 4,
-      objectID: 0,
-    },
-    {
-      title: "Redux",
-      url: "https://redux.js.org/",
-      author: "Dan Abramov, Andrew Clark",
-      num_comments: 2,
-      points: 5,
-      objectID: 1,
-    },
-  ];
-  const [stories, setStories] = React.useState(initialStories);
+  const [stories, setStories] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState(localStorage.getItem('search') || 'React');
-  const handleRemoveStory = (item) =>{
+  const handleRemoveStory = (item) => {
     const newStories = stories.filter(
       (story) => item.objectID !== story.objectID
     );
     setStories(newStories)
   }
-  React.useEffect(()=>{
+  React.useEffect(() => {
     localStorage.setItem('search', searchTerm);
   }, [searchTerm])
 
@@ -75,9 +45,18 @@ const App = () => {
     setSearchTerm(event.target.value);
   }
 
-  const searchedStories = stories.filter(function (story) {
-    return story.title.toLowerCase().includes(searchTerm.toLowerCase());
-  })
+  React.useEffect(() => {
+    if (!searchTerm) return;
+    fetch(`${API_ENDPOINT}${searchTerm}`)
+      .then((response) => response.json())
+      .then((result) => {
+        setStories(result.hits);
+      })
+
+      .catch(() => {
+        //Handle Error
+      });
+  }, [searchTerm]);
 
   return (
     <div>
@@ -89,14 +68,13 @@ const App = () => {
       >
         <strong>Search:</strong>
       </InputWithLabel>
-      <Search onSearch={handleSearch} search={searchTerm} />
       <hr />
-      <List list={searchedStories} onRemoveItem={handleRemoveStory} />
+      <List list={stories} onRemoveItem={handleRemoveStory} />
     </div>
   );
 }
 
-const InputWithLabel =({
+const InputWithLabel = ({
   id,
   value,
   onInputChange,
@@ -109,10 +87,8 @@ const InputWithLabel =({
       id={id}
       type="text"
       value={value}
-      onChange={onInputChange}/>
+      onChange={onInputChange} />
   </>
 );
-
-
 
 export default App;
